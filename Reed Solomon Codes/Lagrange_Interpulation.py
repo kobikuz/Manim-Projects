@@ -1,6 +1,6 @@
 from manim import *
 from copy import deepcopy 
-class LagrangeIntro(Scene):
+class Lagrange_Interpulation(Scene):
     def func(self, x):
         return -x**2 + 4*x - 1
 
@@ -30,7 +30,7 @@ class LagrangeIntro(Scene):
         for i, (x, y) in enumerate(coors):
             d = Dot(
                 axes.c2p(x, y),
-                radius=1 * DEFAULT_DOT_RADIUS, color=GREEN_D
+                radius=1 * DEFAULT_DOT_RADIUS, color=GREEN
             )
 
             t = Tex(f"({x}, {y})")
@@ -45,7 +45,7 @@ class LagrangeIntro(Scene):
 
         c = ParametricFunction(
             lambda t: axes.c2p(t, self.func(t)),
-            t_range=(0, 5), stroke_width=6, color=GREEN_A
+            t_range=(0, 4.25), stroke_width=6, color=GREEN_A
         )
 
         eq = MathTex("p(x) = -x^2 + 4x - 1").scale(1.5).shift(3.25 * UP)
@@ -226,23 +226,23 @@ class LagrangeIntro(Scene):
         r"l_3(x) = -\frac{1}{3} (x - 1) (x - 3)"  
         ).set_color(colors[2])
         eq21f = MathTex(
-        r"l_2(x) =  (x - 1) (x - 4)"
+        r"l_2(x) =  -(x - 1) (x - 4)"
         ).set_color(colors[1])
 
         def p2_l1_1f(x): return (x-3)*(x-4)/3
         p2_l1_1f_c = ParametricFunction(
             lambda t: axes.c2p(t, p2_l1_1f(t)),
-            t_range=(0, 5), color=colors[0], stroke_width=6
+            t_range=(0.3, 5), color=colors[0], stroke_width=6
         )
-        def p2_l3_1f(x): return (x-1)*(x-4)
+        def p2_l3_1f(x): return (-1)*(x-1)*(x-4)
         p2_l2_1f_c = ParametricFunction(
             lambda t: axes.c2p(t, p2_l3_1f(t)),
-            t_range=(0, 5), color=colors[1], stroke_width=6
+            t_range=(0.5, 4.75), color=colors[1], stroke_width=6
         )
         def p2_l2_1f(x): return (x-1)*(x-3)/(-3)
         p2_l3_1f_c = ParametricFunction(
             lambda t: axes.c2p(t, p2_l2_1f(t)),
-            t_range=(0, 5), color=colors[2], stroke_width=6
+            t_range=(0.1, 5), color=colors[2], stroke_width=6
         )
         
         eq20f.scale(0.7).move_to(eq10)
@@ -260,34 +260,40 @@ class LagrangeIntro(Scene):
         
 
         for i in range(3):
-            self.play(Write(eq_arr_first[i]),Write(p2_funcs0[i]))## basic func
-            self.wait(1)
-            self.play(Indicate(labels[i][0][1]),Transform(eq_arr_first[i],eq_arr_second[i]))## calculating
+            self.play(Write(eq_arr_first[i]))
+            self.play(Write(p2_funcs0[i]))## basic func
+            self.wait(0.5)
+            self.play(Indicate(labels[i][0][1]))
+            self.wait(0.5)
+            self.play(Transform(eq_arr_first[i],eq_arr_second[i]),run_time = 1)## calculating
             self.wait(0.5)
             self.play(Write(eq_arr_result[i].next_to(eq_arr_first[i],RIGHT).set_color(colors[i])))## result
             self.wait(0.5)
-            self.play(
-                Transform(p2_funcs0[i], p2_funcs1[i]),  # Transform the function curve
-                TransformMatchingTex(eq_arr_first[i], eq_after_x_tex[i]),  # Morph equation text
+            self.play(TransformMatchingTex(eq_arr_first[i], eq_after_x_tex[i]),  # Morph equation text
                 AnimationGroup(
                     eq_arr_result[i].animate.shift(2*LEFT+0.5*DOWN ).set_opacity(0),  # Move left & fade out
                     lag_ratio=0  # Ensures both happen simultaneously
+                ),run_time = 1)
+            self.wait(0.5)
+            self.play(
+                Transform(p2_funcs0[i], p2_funcs1[i])  # Transform the function curve
                 )
-            )
-            ##self.add(index_labels(labels[i][0]))
             self.wait(1)
             if i==2:
-                self.play(Indicate(labels[i][0][3:5]),Transform(p2_funcs0[i],eq_mult_y[i])
-                      ,TransformMatchingTex(eq_after_x_tex[i],eq_mult_y_tex[i]
-                        ))
+                self.play(Indicate(labels[i][0][3:5]))
+                self.play(TransformMatchingTex(eq_after_x_tex[i],eq_mult_y_tex[i]))
+                self.wait(0.5)
+                self.play(Transform(p2_funcs0[i],eq_mult_y[i]))
             else: 
-                self.play(Indicate(labels[i][0][3]),Transform(p2_funcs0[i],eq_mult_y[i])
-                      ,TransformMatchingTex(eq_after_x_tex[i],eq_mult_y_tex[i]
-                        ))
+                self.play(Indicate(labels[i][0][3]))
+                self.play(TransformMatchingTex(eq_after_x_tex[i],eq_mult_y_tex[i]))
+                self.wait(0.5)
+                self.play(Transform(p2_funcs0[i],eq_mult_y[i]))
+                
             self.wait(1)
 
         self.wait(1.5)
         all_curves = VGroup(p2_funcs0[0],p2_funcs0[1],p2_funcs0[2])
         all_eq = VGroup(eq_mult_y_tex[0],eq_mult_y_tex[1],eq_mult_y_tex[2])
-        self.play(Transform(all_curves,c),TransformMatchingTex(all_eq,eq_f),run_time = 1.5)
+        self.play(Transform(all_curves,c),TransformMatchingTex(all_eq,eq_f),run_time = 2)
         self.wait(1.5)
