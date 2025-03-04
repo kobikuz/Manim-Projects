@@ -56,30 +56,34 @@ class Modulu(Scene):
         for i in range(len(nums2)):
             position = ValueTracker(0)
             dot = Dot(color=colors2[i], radius=2 * DEFAULT_DOT_RADIUS)
-            dot.add_updater(lambda d, pos=position: d.move_to(number_line.n2p(position.get_value())))
+            updater = lambda d, pos=position: d.move_to(number_line.n2p(position.get_value()))
+            dot.add_updater(updater)
             self.add(dot)
             if nums2[i] <= 10:
                 self.play(position.animate.set_value(nums2[i]), run_time=1.5+0.25*i)
                 self.wait(2)
+                dots.append(dot)
             else:
+                new_dot = Dot(color=colors2[i], radius=2 * DEFAULT_DOT_RADIUS)
+                position2 = ValueTracker(0)
+                new_dot.add_updater(lambda d: d.move_to(number_line.n2p(position2.get_value())))
                 # 1. Move to 10
                 self.play(position.animate.set_value(10), run_time=2)
-                self.play(Indicate(dot))
-                self.wait(1)
+                dot.remove_updater(updater)
+                self.play(dot.animate.shift(UP * 2*0.8), run_time=1.5, rate_func=there_and_back)
+                self.play(
+                    FadeOut(dot))
                 # 2. Create a new dot copy at 0 and transform the current dot into it
-                new_dot = Dot(color=colors2[i], radius=2 * DEFAULT_DOT_RADIUS)
-                position = ValueTracker(0)
-                new_dot.add_updater(lambda d: d.move_to(number_line.n2p(position.get_value())))
-                self.play(Transform(dot,new_dot))
-                dots.append(dot)
-                self.wait(1)
-                
+                self.play(FadeIn(new_dot),run_time = 0.5)               
                 # 3. Move to the modulo result smoothly
                 mod_result = nums2[i] % 10
-                self.play(position.animate.set_value(mod_result), run_time=1)
+                self.play(position2.animate.set_value(mod_result), run_time=1)
                 self.wait(2)
+                new_dot.clear_updaters()
+                dots.append(new_dot)
             dot.clear_updaters()
-            dots.append(dot)
+
+            
             
             
         self.play(FadeOut(VGroup(dots)))
