@@ -62,8 +62,7 @@ class RSCodes(Scene):
         s2.center()
 
         b1 = Brace(s2[-2:])
-        t1 = MathTex("k = 2", tex_to_color_map={
-                        "k": YELLOW, "2": A_ORANGE})
+        t1 = MathTex("k = 2").set_color(ORANGE)
         t1.scale(1.5)
         t1.next_to(b1, DOWN)
 
@@ -95,13 +94,12 @@ class RSCodes(Scene):
         self.wait()
 
         b2 = Brace(labels, UP)
-        t2 = MathTex(r"p > m_{i}", tex_to_color_map={
-                        "p": A_GREEN, "i": YELLOW}).next_to(b2,UP)
+        t2 = MathTex(r"p > m_{i}").next_to(b2,UP)
 
         self.play(GrowFromCenter(b2), Write(t2))
         self.wait()
 
-        self.play(Uncreate(b2), Uncreate(t2))
+        self.play(FadeOut(b2), FadeOut(t2))
         self.wait()
 
         s_cp, s_cp2 = s2.copy(), s2.copy()
@@ -112,8 +110,10 @@ class RSCodes(Scene):
 
         eqs = VGroup()
         for i, x in enumerate(np.linspace(3, -3, 6)):
-            t = MathTex(f"f({i}) = m_{i+1}" if i < 4 else f"m_{i+1} = f({i})", tex_to_color_map={
-                    "f": GREEN, "x": LIGHT_PINK,  str(i): YELLOW, str(i+1): YELLOW})
+           ## t = MathTex(f"f({i}) = m_{i+1}" if i < 4 else f"m_{i+1} = f({i})", tex_to_color_map={
+           ##         "f": GREEN})
+            t = MathTex(f"f({i}) = m_{i+1}", tex_to_color_map={
+                    "f": GREEN})
             t.move_to(x * UP)
             eqs.add(t)
 
@@ -142,8 +142,7 @@ class RSCodes(Scene):
 
         for i in range(4):
             dots.add(Dot(axes.c2p(i, numbers[i]), color=A_GREEN))
-            point_lbl.add(Tex(f"({i}, {numbers[i]})", tex_to_color_map={str(i): A_ORANGE, str(
-                numbers[i]): A_ORANGE}).move_to(dots[i], DOWN))
+            point_lbl.add(Tex(f"({i}, {numbers[i]})").move_to(dots[i], DOWN).shift(0.15 * UP))
         point_lbl.shift(0.75 * DOWN)
         eqs[-2:].shift(5 * LEFT)
 
@@ -212,7 +211,7 @@ class RSCodes(Scene):
             y_axis_config={"stroke_width": 3}
         )
         axes.scale(0.85).next_to(labels2_cp2, RIGHT,buff= 0.1)
-        Indicate
+        
 
         
 
@@ -232,7 +231,7 @@ class RSCodes(Scene):
         labels.shift(0.5 * RIGHT)
 
         curve = ParametricFunction(lambda t: axes.c2p(
-            t, self.f(t)), t_range=(0, 6), color=A_GREEN)
+            t, self.f(t)), t_range=(0, 5.5), color=A_GREEN)
 
         self.play(Write(axes))
 
@@ -341,7 +340,7 @@ class RSCodes(Scene):
         s2[1] = nr
         remove_grp = VGroup(
             axes, d, curve, dots, lbl,
-            labels2_cp2, labels, labels2_cp, s_cp, *s2[-2:],
+            labels2_cp2, labels, labels2_cp,s_cp[0],s_cp[2],s_cp[3], *s2[-2:],
             l1, l2)
 
         self.play(Uncreate(remove_grp))
