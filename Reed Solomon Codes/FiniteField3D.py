@@ -80,6 +80,7 @@ class FiniteField3D(ThreeDScene):
         
         # Transition the camera to an angled view.
         self.move_camera(phi=75 * DEGREES, theta=30 * DEGREES, zoom = 0.75, run_time=4)
+        self.wait(2)
         # Begin ambient camera rotation to showcase the 3D structure.
         self.begin_ambient_camera_rotation(rate=0.15)
         self.wait(15)
