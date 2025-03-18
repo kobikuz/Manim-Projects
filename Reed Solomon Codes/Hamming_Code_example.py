@@ -268,21 +268,13 @@ class Matrix_Gen4(Scene):
         self.play(Write(tex44))
         self.wait(2)
 
-class Matrix_Gen5(Scene):
+class Hamming_Code_example(Scene):
     def construct(self):  
         ##show grid
         #grid = NumberPlane()
         #self.add(grid)
         ##
         tex50 = Tex("Now lets see a full example of Sending and error correcting:").to_edge(UP)
-        self.play(Write(tex50))
-        self.wait(1)
-        data_vactor1 = MathTex(r"""
-            \begin{pmatrix}
-            1 \\ 0 \\ 1 \\ 1
-            \end{pmatrix}
-        """).scale(0.4).to_edge(LEFT)
-        data_tex = MathTex(r"\vec{d}").next_to(data_vactor1,UP).shift(UP/2)
         parity_check_matrix = MathTex(r"""
             \begin{bmatrix}
             1 & 1 & 0 & 1 \\
@@ -293,32 +285,40 @@ class Matrix_Gen5(Scene):
             0 & 0 & 1 & 0 \\
             0 & 0 & 0 & 1
             \end{bmatrix}
-        """).scale(0.4).next_to(data_vactor1, RIGHT, buff=0.1)
+        """).scale(0.4).to_edge(LEFT)
+        self.play(Write(tex50))
+        self.wait(1)
+        data_vactor1 = MathTex(r"""
+            \begin{pmatrix}
+            1 \\ 0 \\ 1 \\ 1
+            \end{pmatrix}
+        """).scale(0.4).next_to(parity_check_matrix, RIGHT, buff=0.1)
+        data_tex = MathTex(r"\vec{d}").next_to(data_vactor1,UP).shift(UP/2)      
         parity_check_matrix_tex = MathTex("\mathbf{G}").next_to(parity_check_matrix,UP).align_to(data_tex,DOWN)
-        equal1 = Tex("=").next_to(parity_check_matrix, RIGHT, buff=0.1).align_to(parity_check_matrix, UP + DOWN)
+        equal1 = Tex("=").next_to(data_vactor1, RIGHT, buff=0.1).align_to(parity_check_matrix, UP + DOWN)
         transmitted_vector1 = MathTex(r"""
             \begin{pmatrix}
             0 \\ 1 \\ 1 \\ 0 \\ 0 \\1 \\ 1
             \end{pmatrix}
         """).scale(0.4).next_to(equal1, RIGHT, buff=0.1).align_to(equal1, UP + DOWN)
         transmitted_vector1_tex = MathTex(r"\vec{t}").next_to(transmitted_vector1,UP).align_to(data_tex,DOWN)
-        right_arrow1 = right_arr1 = MathTex(r"\Rightarrow"
+        right_arrow1 = MathTex(r"\Rightarrow"
                         ).next_to(transmitted_vector1, RIGHT, buff=0.1).align_to(transmitted_vector1, UP + DOWN)
-        transmitted_vector1s = MathTex(r"""
-            \begin{pmatrix}
-            0 \\ 1 \\ 1 \\ 0 \\ 0 \\1 \\ 1
-            \end{pmatrix}
-        """).scale(0.4).next_to(right_arrow1, RIGHT, buff=0.1).align_to(right_arrow1, UP + DOWN)
-        transmitted_vector1s_tex = MathTex(r"\vec{t'}").next_to(transmitted_vector1s,UP).align_to(data_tex,DOWN)
         parity_check_matrix1 = MathTex(r"""
             \begin{pmatrix}
             1 & 0 & 1 & 0 & 1 & 0 & 1 \\
             0 & 1 & 1 & 0 & 0 & 1 & 1 \\
             0 & 0 & 0 & 1 & 1 & 1 & 1
             \end{pmatrix}
-        """).scale(0.4).next_to(transmitted_vector1s, RIGHT, buff=0.1)
+        """).scale(0.4).next_to(right_arrow1, RIGHT, buff=0.1).align_to(right_arrow1, UP + DOWN)
+        transmitted_vector1s = MathTex(r"""
+            \begin{pmatrix}
+            0 \\ 1 \\ 1 \\ 0 \\ 0 \\1 \\ 1
+            \end{pmatrix}
+        """).scale(0.4).next_to(parity_check_matrix1, RIGHT, buff=0.1)
+        transmitted_vector1s_tex = MathTex(r"\vec{t'}").next_to(transmitted_vector1s,UP).align_to(data_tex,DOWN)
         parity_check_matrix1_tex = MathTex("\mathbf{H}").next_to(parity_check_matrix1,UP).align_to(data_tex,DOWN)
-        equal2 = Tex("=").next_to(parity_check_matrix1, RIGHT, buff=0.1).align_to(parity_check_matrix1, UP + DOWN)
+        equal2 = Tex("=").next_to(transmitted_vector1s, RIGHT, buff=0.1).align_to(parity_check_matrix1, UP + DOWN)
         syndrome1 =MathTex(r"""
             \begin{pmatrix}
             0 \\ 0 \\ 0
@@ -329,7 +329,7 @@ class Matrix_Gen5(Scene):
         self.play(Write(parity_check_matrix),Write(parity_check_matrix_tex))
         self.play(Write(equal1))
         self.play(Write(transmitted_vector1),Write(transmitted_vector1_tex))
-        self.play(Write(right_arr1))
+        self.play(Write(right_arrow1))
        ## self.play(Write(transmitted_vector1s),Write(transmitted_vector1s_tex))
         self.play(TransformMatchingTex(transmitted_vector1.copy(),transmitted_vector1s),Write(transmitted_vector1s_tex))
         self.play(Write(parity_check_matrix1),Write(parity_check_matrix1_tex))
@@ -346,12 +346,6 @@ class Matrix_Gen5(Scene):
         self.wait(1.5)
 
         ##GREEN ARROW SECTION##
-        green_transmitted_vector =MathTex(r"""
-            \begin{pmatrix}
-            0 \\ 1 \\ 1 \\ 0 \\ 0 \\1 \\ 1
-            \end{pmatrix}
-        """).scale(0.4).next_to(arrow1, RIGHT, buff=0.1).align_to(arrow1, UP + DOWN).shift(UP)
-        green_transmitted_vector_tex = MathTex(r"\vec{t}").next_to(green_transmitted_vector,UP)
         green_reconstructing_matrix = MathTex(
             r"\begin{pmatrix}"
             r"0 & 0 & 1 & 0 & 0 & 0 & 0 \\"
@@ -359,16 +353,21 @@ class Matrix_Gen5(Scene):
             r"0 & 0 & 0 & 0 & 0 & 1 & 0 \\"
             r"0 & 0 & 0 & 0 & 0 & 0 & 1"
             r"\end{pmatrix}"
-        ).scale(0.4).next_to(green_transmitted_vector, RIGHT, buff=0.1)
+        ).scale(0.4).next_to(arrow1, RIGHT, buff=0.1).align_to(arrow1, UP + DOWN)
+        green_transmitted_vector =MathTex(r"""
+            \begin{pmatrix}
+            0 \\ 1 \\ 1 \\ 0 \\ 0 \\1 \\ 1
+            \end{pmatrix}
+        """).scale(0.4).next_to(green_reconstructing_matrix, RIGHT, buff=0.1)
+        green_transmitted_vector_tex = MathTex(r"\vec{t}").next_to(green_transmitted_vector,UP)
         green_reconstructing_matrix_tex = MathTex("\mathbf{R}").next_to(green_reconstructing_matrix,UP).align_to(green_transmitted_vector_tex,DOWN)
-        green_equal = Tex("=").next_to(green_reconstructing_matrix, RIGHT, buff=0.1).align_to(green_reconstructing_matrix, UP + DOWN)
+        green_equal = Tex("=").next_to(green_transmitted_vector, RIGHT, buff=0.1).align_to(green_reconstructing_matrix, UP + DOWN)
         green_final_vector =MathTex(r"""
             \begin{pmatrix}
             1 \\ 0 \\ 1 \\ 1 
             \end{pmatrix}
         """).scale(0.4).next_to(green_equal, RIGHT, buff=0.1)
         green_final_vector_tex = MathTex(r"\vec{d'}").next_to(green_final_vector,UP).align_to(green_transmitted_vector_tex,DOWN)
-
         self.play(TransformMatchingTex(transmitted_vector1s.copy(),green_transmitted_vector),Write(green_transmitted_vector_tex))
         self.play(Write(green_reconstructing_matrix),Write(green_reconstructing_matrix_tex))
         self.play(Write(green_equal),TransformMatchingTex(VGroup(green_transmitted_vector.copy(),green_reconstructing_matrix.copy()),green_final_vector),Write(green_final_vector_tex))
@@ -405,13 +404,6 @@ class Matrix_Gen5(Scene):
         red_transmitted_vector1s_corrupted_tex = MathTex(r"\vec{t'}").next_to(red_transmitted_vector1s_corrupted,UP)
         red_right_arrow =  MathTex(r"\Rightarrow"
                         ).next_to(red_transmitted_vector1s_corrupted, RIGHT, buff=0.1).align_to(red_transmitted_vector1s_corrupted, UP + DOWN)
-        red_transmitted_vector1s_fixed = MathTex(r"""
-            \begin{pmatrix}
-            0 \\ 1 \\ 1 \\ 0 \\ 0 \\1 \\ 1
-            \end{pmatrix}
-        """).scale(0.4).next_to(red_right_arrow, RIGHT, buff=0.1)
-        red_transmitted_vector1s_fixed[0][14].set_color(GREEN)
-        red_transmitted_vector1s_fixed_tex = MathTex(r"\vec{t}").next_to(red_transmitted_vector1s_fixed,UP)
         red_reconstructing_matrix = MathTex(
             r"\begin{pmatrix}"
             r"0 & 0 & 1 & 0 & 0 & 0 & 0 \\"
@@ -419,9 +411,16 @@ class Matrix_Gen5(Scene):
             r"0 & 0 & 0 & 0 & 0 & 1 & 0 \\"
             r"0 & 0 & 0 & 0 & 0 & 0 & 1"
             r"\end{pmatrix}"
-        ).scale(0.4).next_to(red_transmitted_vector1s_fixed, RIGHT, buff=0.1)
+        ).scale(0.4).next_to(red_right_arrow, RIGHT, buff=0.1)
+        red_transmitted_vector1s_fixed = MathTex(r"""
+            \begin{pmatrix}
+            0 \\ 1 \\ 1 \\ 0 \\ 0 \\1 \\ 1
+            \end{pmatrix}
+        """).scale(0.4).next_to(red_reconstructing_matrix, RIGHT, buff=0.1)
+        red_transmitted_vector1s_fixed[0][14].set_color(GREEN)
+        red_transmitted_vector1s_fixed_tex = MathTex(r"\vec{t}").next_to(red_transmitted_vector1s_fixed,UP)
         red_reconstructing_matrix_tex = MathTex("\mathbf{R}").next_to(red_reconstructing_matrix,UP).align_to(red_transmitted_vector1s_corrupted_tex,DOWN)
-        red_equal = Tex("=").next_to(red_reconstructing_matrix, RIGHT, buff=0.1).align_to(red_reconstructing_matrix, UP + DOWN)
+        red_equal = Tex("=").next_to(red_transmitted_vector1s_fixed, RIGHT, buff=0.1).align_to(red_reconstructing_matrix, UP + DOWN)
         red_final_vector =MathTex(r"""
             \begin{pmatrix}
             1 \\ 0 \\ 1 \\ 1 
