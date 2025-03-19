@@ -3,10 +3,10 @@ from manim import *
 class Modulu(Scene):
    def construct(self):
         # 1. Display a number line from 0 to 9
-        number_line = NumberLine(x_range=[0, 10, 1], length=10)
+        number_line = NumberLine(x_range=[0, 11, 1], length=11)
         labels = VGroup(*[
             MathTex(str(i)).next_to(number_line.n2p(i), DOWN)
-            for i in range(11)
+            for i in range(12)
         ])
         
         self.play(Create(number_line), Write(labels))
@@ -40,9 +40,9 @@ class Modulu(Scene):
         self.play(Uncreate(nums_tex),FadeOut(VGroup(dots0)))
 
         # 2. Highlight the "mod 10" behavior by wrapping around
-        mod = 10
+        mod = 11
         nums2 = [3, 7, 12,  16]
-        mod_text = Tex(r"Now with Mod 10").scale(0.9).to_edge(UP)
+        mod_text = Tex(r"Now with Mod 11").scale(0.9).to_edge(UP)
         colors2 = [RED, GREEN, BLUE, YELLOW]
         nums2_tex=  Tex("[3,7,12,16]",tex_to_color_map = {
             "3": colors2[0],
@@ -59,7 +59,7 @@ class Modulu(Scene):
             updater = lambda d, pos=position: d.move_to(number_line.n2p(position.get_value()))
             dot.add_updater(updater)
             self.add(dot)
-            if nums2[i] <= 10:
+            if nums2[i] <= 11:
                 self.play(position.animate.set_value(nums2[i]), run_time=1.5+0.25*i)
                 self.wait(2)
                 dots.append(dot)
@@ -68,7 +68,7 @@ class Modulu(Scene):
                 position2 = ValueTracker(0)
                 new_dot.add_updater(lambda d: d.move_to(number_line.n2p(position2.get_value())))
                 # 1. Move to 10
-                self.play(position.animate.set_value(10), run_time=2)
+                self.play(position.animate.set_value(11), run_time=2)
                 dot.remove_updater(updater)
                 self.play(dot.animate.shift(UP * 2*0.8), run_time=1.5, rate_func=there_and_back)
                 self.play(
@@ -76,8 +76,8 @@ class Modulu(Scene):
                 # 2. Create a new dot copy at 0 and transform the current dot into it
                 self.play(FadeIn(new_dot),run_time = 0.5)               
                 # 3. Move to the modulo result smoothly
-                mod_result = nums2[i] % 10
-                self.play(position2.animate.set_value(mod_result), run_time=1)
+                mod_result = nums2[i] % 11
+                self.play(position2.animate.set_value(mod_result), run_time=5)
                 self.wait(2)
                 new_dot.clear_updaters()
                 dots.append(new_dot)
