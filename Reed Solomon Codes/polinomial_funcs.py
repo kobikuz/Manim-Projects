@@ -3,7 +3,7 @@ from manim import *
 class FiniteFieldPolynomialsAnimation(Scene):
     def construct(self):
         # Introductory Texts (kept as Tex because they are partly text)
-        intro_title = Tex(r"Finite Field Polynomials", font_size=60)
+        intro_title = Tex(r"Finite Field Polynomials", font_size=60).to_edge(UP)
         intro_text = Tex(
             r"Let's pick a fixed $k$ and list all the polynomials obtained from",
             r"vectors of length $k$ over a finite field.",
@@ -54,7 +54,7 @@ class FiniteFieldPolynomialsAnimation(Scene):
         
         # Create a VGroup to store all the pairs for later arrangement.
         all_pairs = VGroup()
-        pair_spacing = 1  # vertical space between pairs
+        pair_spacing = 0.5  # vertical space between pairs
 
         # Loop through each pair, animate them, and arrange vertically.
         for i, (vec_str, poly_str) in enumerate(pairs):
@@ -70,17 +70,17 @@ class FiniteFieldPolynomialsAnimation(Scene):
             
             # If not the first pair, position below the previous one.
             if all_pairs:
-                pair_group.next_to(all_pairs, DOWN, aligned_edge=LEFT, buff=pair_spacing)
+                pair_group.scale(0.8).next_to(all_pairs, DOWN, aligned_edge=LEFT, buff=pair_spacing)
             else:
-                pair_group.to_edge(UP, buff=1)
+                pair_group.scale(0.8).to_edge(UP, buff=0.5)
             
             # Animate the creation of the vector.
             self.play(Write(vec_text), run_time=0.8)
             # Animate drawing the arrow.
             self.play(Create(arrow), run_time=0.8)
             # Animate the polynomial appearing via a TransformFromCopy from the vector.
-            self.play(TransformFromCopy(vec_text, poly_text), run_time=1)
-            self.wait(0.5)
+            self.play(TransformFromCopy(vec_text, poly_text), run_time=0.8)
+            self.wait(0.8)
             
             # Add the current pair to the group.
             all_pairs.add(pair_group)
