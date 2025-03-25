@@ -36,23 +36,23 @@ class ThreeD_distance(ThreeDScene):
 
         # Add axes and all points to the scene
         self.add(axes)
+        self.wait(1.5)
         self.begin_ambient_camera_rotation(rate=0.1)
+        anims1 =[]
         for dot in dots:
-            self.play(FadeIn(dot),run_time = 0.7)
-            self.wait(0.4)
-        self.wait(4)
-        self.play(FadeIn(*spheres),run_time = 1.5)
-        self.wait(4)
+            anims1.append(FadeIn(dot))
+        self.play(*anims1,run_time = 2)    
+        self.wait(2)
+        self.play(FadeIn(*spheres),run_time = 2)
+        self.wait(5)
         anims =[]
         for dot in dots:
             anims.append(dot.animate.shift(dot.get_center()))
         for sphere in spheres:
             anims.append(sphere.animate.shift(sphere.get_center()).set_color(GREEN))
-        self.play(*anims,run_time = 6,rate_func= smooth)
+        self.play(*anims,run_time = 4,rate_func= smooth)
         # Begin ambient camera rotation after the scene is fully set up
-        self.wait(6)
-        self.play(*anims,run_time =6,rate_func= smooth)
-        self.wait(6)
+        self.wait(5)
         self.stop_ambient_camera_rotation()
     """
     actually it works fine right now without the change of the points
