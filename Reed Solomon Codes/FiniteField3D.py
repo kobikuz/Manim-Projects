@@ -18,8 +18,8 @@ class FiniteField3D(ThreeDScene):
         field_circle = Circle(radius=R, color=YELLOW)
         self.play(Create(field_circle))
         
-        # Define the finite field as 5 equally spaced points on the circle.
-        angles = np.linspace(0, 2 * np.pi, 5, endpoint=False)
+        # Define the finite field as 11 equally spaced points on the circle.
+        angles = np.linspace(0, 2 * np.pi, 11, endpoint=False)
         field_points = [np.array([R * np.cos(theta), R * np.sin(theta), 0])
                         for theta in angles]
         field_dots = VGroup(*[Dot3D(point, color=YELLOW, radius=0.1) for point in field_points])
