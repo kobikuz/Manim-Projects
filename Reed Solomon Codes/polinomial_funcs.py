@@ -1,45 +1,7 @@
 from manim import *
 
-class FiniteFieldPolynomialsAnimation(Scene):
+class polinom_2(Scene):
     def construct(self):
-        # Introductory Texts (kept as Tex because they are partly text)
-        intro_title = Tex(r"Finite Field Polynomials", font_size=60).to_edge(UP)
-        intro_text = Tex(
-            r"Let's pick a fixed $k$ and list all the polynomials obtained from",
-            r"vectors of length $k$ over a finite field.",
-            font_size=36,
-        ).next_to(intro_title, DOWN)
-        choice = Tex(
-            r"Choose: $k=3$ (degree $2$ polynomials) and finite field $\mathbb{F}_2=\{0,1\}$",
-            font_size=36,
-        ).next_to(intro_text, DOWN, buff=0.5)
-        vector_poly = Tex(
-            r"A vector $\vec{v}=[a_0,a_1,a_2]$ corresponds to",
-            r"$f(x)=a_0+a_1x+a_2x^2$, with each $a_i\in\{0,1\}$",
-            font_size=36,
-        ).next_to(choice, DOWN, buff=0.5)
-        count = Tex(
-            r"Since there are 3 coefficients and each can be 0 or 1,",
-            r"we have $2^3=8$ polynomials.",
-            font_size=36,
-        ).next_to(vector_poly, DOWN, buff=0.5)
-        
-        # Show the introductory texts sequentially.
-        self.play(Write(intro_title))
-        self.wait(1)
-        self.play(Write(intro_text))
-        self.wait(1)
-        self.play(Write(choice))
-        self.wait(1)
-        self.play(Write(vector_poly))
-        self.wait(1)
-        self.play(Write(count))
-        self.wait(2)
-        
-        # Fade out all the text before starting the individual animations.
-        self.play(FadeOut(VGroup(intro_title, intro_text, choice, vector_poly, count)))
-        self.wait(1)
-        
         # Define the vector to polynomial pairs.
         pairs = [
             (r"[0,0,0]", r"f(x)=0"),
