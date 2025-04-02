@@ -62,7 +62,7 @@ class RSCodes(Scene):
         s2.center()
 
         b1 = Brace(s2[-2:])
-        t1 = MathTex("k = 2").set_color(ORANGE)
+        t1 = MathTex("q = 2").set_color(ORANGE)
         t1.scale(1.5)
         t1.next_to(b1, DOWN)
 
