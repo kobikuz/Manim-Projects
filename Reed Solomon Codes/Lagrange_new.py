@@ -1,10 +1,24 @@
 from manim import *
 from copy import deepcopy 
 class Lagrange2(Scene):
-    def func(self, x):
+   def func(self, x):
         return -x**2 + 4*x - 1
-
-    def construct(self):
+   def n_func1(self,x):
+       return 2
+   def n_func2(self,x):
+       return -13/12*x**2+43/12*x
+   def n_func3(self,x):
+       return -1.7333*x**2+8.1333*x -5.8
+   def n_func4(self,x):
+       return -1/2*x**2+3/2*x+1
+   def n_func5(self,x):
+       return -3/4*x**2 +9/4*x + 2
+   def n_func6(self,x):
+       return -3/2*x**2 +13/2*x -3
+   def construct(self):
+        n_colors= [RED_E,RED_C,MAROON_C,YELLOW_D,YELLOW_A,GREEN_A]
+        functions  =[self.n_func1,self.n_func2,self.n_func3,self.n_func4,self.n_func5,
+                     self.n_func6,self.func]
         x_vals = [1, 3, 4]
         y_vals = [2, 2, -1]
         coors = [(x_vals[i], y_vals[i]) for i in range(3)]
@@ -54,20 +68,41 @@ class Lagrange2(Scene):
 
         eq = MathTex("p(x) = -x^2 + 4x - 1").scale(1.5).shift(3.25 * UP)
         eq_f = eq.copy()
-        grp = VGroup(axes, c, points, labels)
+        
 
         self.play(Write(axes), Write(points), Write(labels))
         self.wait()
 
-        self.play(Write(c))
-        self.wait()
+        p=0
+        graph = ParametricFunction(
+            lambda t: axes.c2p(t, functions[0](t)),
+            t_range=(0, 4.25),
+            stroke_width=6,
+            color=n_colors[p]
+        )
+        self.play(Create(graph))
+        self.wait(1) 
+
+        for func in functions[1:]:
+            new_graph = ParametricFunction(
+                lambda t: axes.c2p(t, func(t)),
+                t_range=(0, 4.25),
+                stroke_width=6,
+                color=n_colors[p]
+            )
+            p+=1
+            # Animate the transformation from the current graph to the new graph.
+            self.play(Transform(graph, new_graph), run_time=1.5)
+            self.wait(0.5)
+       
+        grp = VGroup(axes, graph, points, labels)
 
         self.play(ApplyMethod(grp.shift, 0.5 * DOWN))
         self.play(Write(eq))
         self.wait()
         self.play(ApplyWave(eq))
         self.wait()
-        self.play(FadeOut(VGroup(eq, c)))
+        self.play(FadeOut(VGroup(eq, graph)))
 
         def l1(x): return (x-3)*(x-4)/6
         l1_c = ParametricFunction(
@@ -308,7 +343,7 @@ class Lagrange2(Scene):
         self.wait(1.5)
         all_curves = VGroup(p2_funcs0[0],p2_funcs0[1],p2_funcs0[2])
         all_eq = VGroup(eq_after_x_tex[0],eq_after_x_tex[1],eq_after_x_tex[2])
-        self.play(Transform(all_curves,c),Transform(all_eq,eq_f),run_time = 2)
+        self.play(Transform(all_curves,graph),Transform(all_eq,eq_f),run_time = 2)
         self.wait(1)
         self.play(ApplyWave(eq_f),run_time= 2)
         self.wait(2)
