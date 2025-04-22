@@ -30,7 +30,7 @@ class Modulu(Scene):
             position = ValueTracker(0)
             dot = Dot(color=colors[i], radius=2 * DEFAULT_DOT_RADIUS)
             dot.add_updater(lambda d, pos=position: d.move_to(number_line.n2p(pos.get_value())))
-            self.add(dot)
+            self.play(FadeIn(dot))
             self.play(position.animate.set_value(nums[i]), run_time=1.5+0.25*i)
             self.wait(2)
             dot.clear_updaters()  # Freeze the dot's position
@@ -39,7 +39,7 @@ class Modulu(Scene):
         
         self.play(Uncreate(nums_tex),FadeOut(VGroup(dots0)))
 
-        # 2. Highlight the "mod 10" behavior by wrapping around
+        # 2. Highlight the "mod 11" behavior by wrapping around
         mod = 11
         nums2 = [3, 7, 12,  16]
         mod_text = Tex(r"Now with Mod 11").scale(0.9).to_edge(UP)
@@ -58,9 +58,9 @@ class Modulu(Scene):
             dot = Dot(color=colors2[i], radius=2 * DEFAULT_DOT_RADIUS)
             updater = lambda d, pos=position: d.move_to(number_line.n2p(position.get_value()))
             dot.add_updater(updater)
-            self.add(dot)
+            self.play(FadeIn(dot))
             if nums2[i] <= 11:
-                self.play(position.animate.set_value(nums2[i]), run_time=1.5+0.25*i)
+                self.play(position.animate.set_value(nums2[i]), run_time=1.5)
                 self.wait(2)
                 dots.append(dot)
             else:
@@ -77,7 +77,7 @@ class Modulu(Scene):
                 self.play(FadeIn(new_dot),run_time = 0.5)               
                 # 3. Move to the modulo result smoothly
                 mod_result = nums2[i] % 11
-                self.play(position2.animate.set_value(mod_result), run_time=5)
+                self.play(position2.animate.set_value(mod_result), run_time=0.75+0.25*i)
                 self.wait(2)
                 new_dot.clear_updaters()
                 dots.append(new_dot)
@@ -95,15 +95,15 @@ class Modulu(Scene):
         offset = 0.15
         circle_numbers = VGroup(*[
             MathTex(str(i)).move_to(
-                circle.point_at_angle(i * TAU / mod +PI/2)
-                + (circle.point_at_angle(i * TAU / mod+ PI/2) - circle.get_center()) * offset
+                circle.point_at_angle(-i * TAU / mod+PI/2 )
+                + (circle.point_at_angle(-i * TAU / mod+PI/2) - circle.get_center()) * offset
             )
             for i in range(mod)
         ])
 
         # Animate the transformation of number line to circle with numbers sticking out
         self.play(Transform(number_line, circle), Transform(labels, circle_numbers),nums2_tex.animate.move_to(mod_text),FadeOut(mod_text))
-        self.wait(1)
+        self.wait(2)
 
         # For each number, animate the dot moving along the circle.
         dots2= []
@@ -114,9 +114,9 @@ class Modulu(Scene):
             dot = Dot(color=colors2[i], radius=2 * DEFAULT_DOT_RADIUS)
             angle_offset = PI/2  # if your labels/circle were rotated by 90°
             dot.add_updater(lambda d, pos=position: d.move_to(
-                circle.point_at_angle(angle_offset + (pos.get_value() % mod) * TAU / mod)
+                circle.point_at_angle(angle_offset + (-pos.get_value() % mod) * TAU / mod)
             ))
-            self.add(dot)
+            self.play(FadeIn(dot))
             
             if nums2[i] <= mod:
                 # For numbers within the modulus range, simply animate to that number.
