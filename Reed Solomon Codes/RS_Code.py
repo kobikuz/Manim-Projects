@@ -69,10 +69,9 @@ class RSCodes(Scene):
             },
         ).next_to(axes, UP, buff=0.5)
 
-        self.play(Create(axes), Create(graph))
-        self.wait(2)
-        self.play(Write(func_tex))
-        self.wait(1.5)
+       
+        #self.play(Write(func_tex))
+        #self.wait(1.5)
          # ----------------------------------------------------
         # Split formula into pieces → green coefficient squares
         # ----------------------------------------------------
@@ -96,12 +95,18 @@ class RSCodes(Scene):
                     .align_to(func_tex, UP).shift(1 * DOWN)
 
 
-        for tex_sym, target_sq in zip(coeff_tex, column_targets):
-            self.play(TransformFromCopy(tex_sym, target_sq), run_time=0.85)
-            self.wait(0.5)
+       # for tex_sym, target_sq in zip(coeff_tex, column_targets):
+       #     self.play(TransformFromCopy(tex_sym, target_sq), run_time=0.85)
+       #     self.wait(0.5)
+        for coeff in column_targets:
+            self.play(FadeIn(coeff), run_time=0.5)
+            self.wait(0.75)
+        self.wait(2)
 
-        self.wait(0.5)
-
+        self.play(TransformFromCopy(VGroup(column_targets),func_tex))
+        self.wait(2)
+        self.play(Create(axes), TransformFromCopy(func_tex,graph))
+        self.wait(2)
 
         # ----------------------------------------------------
         # ❶  Sampling demo — 7 dots fly into a right-side column
