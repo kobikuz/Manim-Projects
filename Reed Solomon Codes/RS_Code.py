@@ -1,5 +1,7 @@
 from manim import *
 import numpy as np  # used later for np.linspace
+import numpy as np
+from scipy.interpolate import lagrange
 
 # ----------------------------------------------------------
 # Colour palette
@@ -42,7 +44,10 @@ class RSCodes(Scene):
     # polynomial used throughout
     @staticmethod
     def f(x):
-        return 1/3 * x**3 - 5/2 * x**2 + 25/6 * x + 2
+        return 1 * x**3 +0 * x**2 + 1 * x + 3
+    @staticmethod
+    def p(x):
+        return (1/15)*x**3 - (7/6)*x**2 + (107/30)*x + 3
 
     def construct(self):
         shades = ["#fc998e", "#fb8d80", "#fb8072", "#e27367", "#c9665b"]
@@ -50,23 +55,24 @@ class RSCodes(Scene):
         # 0.  Draw axes & polynomial + formula
         # ====================================================
         axes = Axes(
-            x_range=(0, 6), y_range=(-2, 9),
+            x_range=(0, 6), y_range=(0, 226),
             axis_config={"include_tip": False},
             x_axis_config={"stroke_width": 3},
-            y_axis_config={"stroke_width": 3},
+            y_axis_config={"stroke_width": 3, "include_ticks"  : False}
         ).scale(0.7)
 
-        graph = axes.plot(self.f, x_range=[0, 6], color=A_GREEN)
+        axes_n = Axes(
+            x_range=(0, 6), y_range=(-3, 6),
+            axis_config={"include_tip": False},
+            x_axis_config={"stroke_width": 3},
+            y_axis_config={"stroke_width": 3}
+        ).scale(0.7)
+
+        graph = axes.plot(self.f, x_range=(0, 6), color=A_GREEN)
+        graph2 =axes_n.plot(self.p, x_range=(0, 6), color=A_GREEN)
 
         func_tex = MathTex(
-            r"f(x)=\frac13x^{3}-\frac52x^{2}+\frac{25}{6}x+2",
-            tex_to_color_map={
-                r"\frac13": A_GREEN,
-                r"-\frac52": A_GREEN,
-                r"\frac{25}{6}": A_GREEN,
-                r"+2": A_GREEN,
-                "f": A_GREEN,
-            },
+            r"f(x)=\frac13x^{3}+x+3"
         ).next_to(axes, UP, buff=0.5)
 
        
@@ -84,7 +90,7 @@ class RSCodes(Scene):
 
         coeff_tex.set_opacity(0)   # fully invisible
         self.add(coeff_tex)
-        coeff_vals  = ["1/3", "-5/2", "25/6", "2"]
+        coeff_vals  = ["1", "0", "1", "3"]
         column_targets = VGroup()
         for val in coeff_vals:
             sq = NumberSquare(val, color=A_GREEN, side_length=1, num_scale=0.9)
@@ -105,25 +111,29 @@ class RSCodes(Scene):
 
         self.play(TransformFromCopy(VGroup(column_targets),func_tex))
         self.wait(2)
-        self.play(Create(axes), TransformFromCopy(func_tex,graph))
-        self.wait(2)
+        g= DashedVMobject(graph)
+        self.play(Create(axes), TransformFromCopy(func_tex,g))
+        self.wait(3)
+        self.play(Transform(axes,axes_n),Transform(g,DashedVMobject(graph2)))
+        self.wait(3)
 
         # ----------------------------------------------------
         # ❶  Sampling demo — 7 dots fly into a right-side column
         #      x = 0,1,2,3,4,5,6   →   f(x) = [2,4,3,1,0,2,9]
         # ----------------------------------------------------
-        demo_xs     = list(range(7))                # 0‥6
-        demo_vals   = [2, 4, 3, 1, 0, 2, 9]         # f(0)…f(6)
+        demo_xs     = list(range(7))
+        demo_vals   = [3, 5, 6, 5, 1, 0, 1]           # ▸▸ new list
+        demo_index  = [1, 2, 3, 2, 4, 0, 4]           # colour indices
         demo_shades = ["#fc998e", "#fb8d80", "#fb8072",
                     "#e27367", "#c9665b"]        # same palette
-        demo_index  = [2, 4, 0, 4, 1, 3, 2]         # colour for each value
+
 
         dots        = VGroup()
         demo_column = VGroup()
 
         # 1) create and show dots on the graph
         for x_val in demo_xs:
-            d = Dot(axes.c2p(x_val, self.f(x_val)), color=A_ORANGE)
+            d = Dot(axes_n.c2p(x_val, self.p(x_val)), color=A_ORANGE)
             dots.add(d)
             self.play(GrowFromCenter(d), run_time=0.3)
             self.wait(0.3)
@@ -149,15 +159,15 @@ class RSCodes(Scene):
         self.play(Indicate(demo_column, color =None,scale_factor=1.1))
         self.wait(2)
         # remove axes & graph and dots
-        self.play(FadeOut(VGroup(axes,graph,dots,func_tex,column_targets)))
+        self.play(FadeOut(VGroup(axes,g,dots,func_tex,column_targets)))
 
         # ====================================================
         # 1.  Begin original long animation
         # ====================================================
 
-        numbers  = [2, 4, 3, 1, "?", "?"]
-        numbers2 = [2, 4, 3, 1, 0, "?"]
-        c        = [2, 4, 0, 4, 1, 3]
+        numbers  = [3, 5, 6, 5, "?", "?"]             # ▸▸ new
+        numbers2 = [3, 5, 6, 5, 1, "?"]               # ▸▸ new
+        c        = [1, 2, 3, 2, 4, 0]                 # ▸▸ new
 
         r1 = Rectangle(height=2.5, width=2.5).to_edge(LEFT).shift(0.3*RIGHT)
         r2 = Rectangle(height=2.5, width=2.5).to_edge(RIGHT).shift(0.3*LEFT)
@@ -217,11 +227,11 @@ class RSCodes(Scene):
 
         self.play(Transform(s2, s_cp2))
 
-        nr_1 = NumberSquare("?", A_GREY, side_length=1, num_scale=2
+        nr_1 = NumberSquare("?", A_GREY, side_length=0.75, num_scale=1
                            ).move_to(s2[1].get_center())
-        nr_2 = NumberSquare("?", A_GREY, side_length=1, num_scale=2
+        nr_2 = NumberSquare("?", A_GREY, side_length=0.75, num_scale=1
                            ).move_to(s2[4].get_center())
-        nr_3 = NumberSquare("?", A_GREY, side_length=1, num_scale=2
+        nr_3 = NumberSquare("?", A_GREY, side_length=0.75, num_scale=1
                            ).move_to(s2[-1].get_center())
         self.play(Transform(s2[1], nr_1), Transform(s2[4], nr_2),Transform(s2[-1], nr_3))
         self.wait(2)
@@ -231,21 +241,21 @@ class RSCodes(Scene):
             labels2_cp2[i].move_to(x * UP)
             s_cp[i].move_to(x * UP)
         s_cp.shift(6 * LEFT)
-        labels2_cp2.shift(4.5 * LEFT)
+        labels2_cp2.shift(5 * LEFT)
 
-        axes3 = Axes(
-            x_range=(0, 6), y_range=(-2, 9),
-            axis_config={"include_tip": False},
-            x_axis_config={"stroke_width": 3},
-            y_axis_config={"stroke_width": 3},
-        ).scale(0.7).next_to(labels2_cp2, RIGHT, buff=0.1)
+        axes3 = Axes(                                 # vertical range 0–6
+                x_range=(0, 6), y_range=(-3, 6),      # ▸▸ updated
+                axis_config={"include_tip": False},
+                x_axis_config={"stroke_width": 3},
+                y_axis_config={"stroke_width": 3},
+                ).scale(0.7).next_to(labels2_cp2, RIGHT, buff=1).shift(0.5 * DOWN)
 
         self.play(FadeOut(VGroup(r1,tt1,r2,tt2)),
             Transform(s2, s_cp),
             Transform(labels2, labels2_cp2)
         )
 
-        coors = [(0, 2), (2, 3), (3, 1), (5, 2)]
+        coors = [(0, 3), (2, 6), (3, 5), (5, 0)]      
         dots, labels3 = VGroup(), VGroup()
         for x_val, y_val in coors:
             dots.add(Dot(axes3.c2p(x_val, y_val), color=A_GREEN))
@@ -256,16 +266,24 @@ class RSCodes(Scene):
                 .move_to(dots[-1], DOWN).shift(0.25*RIGHT))
         labels3.shift(0.5 * RIGHT)
 
-        curve3 = ParametricFunction(
-            lambda t: axes3.c2p(t, self.f(t)),
-            t_range=(0, 6), color=A_GREEN)
+        xs = np.array([0, 2, 3, 5], dtype=float)
+        ys = np.array([3, 6, 5, 0], dtype=float)          # f(x) mod 7
+
+        poly = lagrange(xs, ys)                           # scipy returns a poly1d
+
+        curve3 = ParametricFunction(                      # plot the interpolant
+            lambda t: axes3.c2p(t, poly(t) ),          # keep values in GF(7)
+            t_range=(0, 6),
+            color=A_GREEN,
+        )
 
         self.play(Write(axes3))
         grp = VGroup(*self.get_indices(labels2_cp2, [0, 2, 3, 5]))
         self.play(TransformFromCopy(grp, dots))
         self.play(Write(labels3), run_time =4)
-        self.wait()
-        self.play(Write(curve3))
+        self.wait(2)
+        c=DashedVMobject(curve3)
+        self.play(Write(c))
         #self.bring_to_front(labels3)
         """
         x_tracker = ValueTracker(0)
@@ -320,7 +338,7 @@ class RSCodes(Scene):
         self.play(TransformFromCopy(moving_dot, s_cp[3]))
         """
         func_tex2 = MathTex(
-            r"f(x)=\frac13x^{3}-\frac52x^{2}+\frac{25}{6}x+2").to_edge(UP)
+            r"f(x)=\frac13x^{3}+x+3").to_edge(UP)
         self.wait(2)
         self.play(TransformFromCopy(labels3,func_tex2))
         self.wait(2)
@@ -330,7 +348,7 @@ class RSCodes(Scene):
        #     s_cp[0], s_cp[2], s_cp[3], *s2[-3:],
        #     l1, l2)
         remove_grp = VGroup(
-            axes3, curve3, dots,
+            axes3, c, dots,
            labels2, labels3, 
            s_cp[0], s_cp[2], s_cp[3], *s2[:]
            )
@@ -338,6 +356,8 @@ class RSCodes(Scene):
         self.play(FadeOut(remove_grp), TransformFromCopy(func_tex2,column_targets_copy),
                   func_tex2.animate.center().shift(1*UP),
                   column_targets_copy.animate.center().shift(1*DOWN), run_time = 2)
+        self.wait(2)
+        self.play(FadeOut(func_tex2,column_targets_copy))
         self.wait(2)
 
     # ------------------------------------------------------
