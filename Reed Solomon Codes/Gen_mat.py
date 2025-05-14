@@ -14,7 +14,7 @@ class Gen_mat(Scene):
         vec_C = MathTex(r"\begin{pmatrix} C_0 \\ C_1 \\ C_2 \\ C_3 \\ C_4 \\ C_5 \\ \vdots \end{pmatrix}",
                         ).to_edge(RIGHT)
         for color in color1:
-            vec_C[0][color].set_color(PINK)
+            vec_C[0][color].set_color(MAROON_A)
 
         Gen_mat = MathTex(r"\begin{pmatrix}"
                   r" A_0 & B_0 & C_0 & \ldots  \\"
@@ -31,7 +31,7 @@ class Gen_mat(Scene):
         for i in range(len(colors11)):
             Gen_mat[0][colors11[i]].set_color(ORANGE)
             Gen_mat[0][colors12[i]].set_color(BLUE)
-            Gen_mat[0][colors13[i]].set_color(PINK)
+            Gen_mat[0][colors13[i]].set_color(MAROON_A)
         br2 = Brace(Gen_mat, LEFT)
         b2_tex = MathTex("m").next_to(br2, LEFT).set_color(YELLOW)
         br3 = Brace(Gen_mat, DOWN)

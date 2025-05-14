@@ -72,7 +72,7 @@ class RSCodes(Scene):
         graph2 =axes_n.plot(self.p, x_range=(0, 6), color=A_GREEN)
 
         func_tex = MathTex(
-            r"f(x)=\frac13x^{3}+x+3"
+            r"f(x)=x^{3}+x+3"
         ).next_to(axes, UP, buff=0.5)
 
        
@@ -146,7 +146,7 @@ class RSCodes(Scene):
 
         demo_column.arrange(DOWN, buff=0.25) \
                 .to_edge(RIGHT, buff=1.0) \
-                .align_to(func_tex, UP).shift(0.5 * DOWN)
+                .align_to(func_tex, UP).shift(0.25 * DOWN)
 
         # 3) fly each dot into its square’s slot, one by one
         for dot, square in zip(dots, demo_column):
@@ -338,7 +338,7 @@ class RSCodes(Scene):
         self.play(TransformFromCopy(moving_dot, s_cp[3]))
         """
         func_tex2 = MathTex(
-            r"f(x)=\frac13x^{3}+x+3").to_edge(UP)
+            r"f(x)=x^{3}+x+3").to_edge(UP)
         self.wait(2)
         self.play(TransformFromCopy(labels3,func_tex2))
         self.wait(2)

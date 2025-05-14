@@ -44,26 +44,26 @@ class polinom_2(Scene):
             Returns a VGroup.
             """
             column = VGroup()
-            pair_spacing = 0.45  # vertical spacing between pairs
+            pair_spacing = 0.5  # vertical spacing between pairs
 
             # For each pair, create and group the mobjects.
             for vec_str, poly_str in pairs:
                 # Create the vector and polynomial as MathTex objects.
-                vec_text = MathTex(vec_str, font_size=36)
-                poly_text = MathTex(poly_str, font_size=36)
-                arrow = Arrow(start=ORIGIN, end=RIGHT, buff=0.1, color=WHITE)
+                vec_text = MathTex(vec_str, font_size=42)
+                poly_text = MathTex(poly_str, font_size=42)
+                arrow = Arrow(start=ORIGIN, end=RIGHT, buff=0.05, color=WHITE)
 
                 # Arrange them in a row.
-                pair_group = VGroup(vec_text, arrow, poly_text).arrange(RIGHT, buff=0.1)
+                pair_group = VGroup(vec_text, arrow, poly_text).arrange(RIGHT, buff=0.03)
                 # Optionally scale the group (here 0.8 as in your code).
-                pair_group.scale(0.8)
+                pair_group.scale(0.78)
 
                 # If this column already has content, position this pair below the previous one.
                 if column:
                     pair_group.next_to(column, DOWN, aligned_edge=LEFT, buff=pair_spacing)
                 else:
                     # Place the first pair; its placement will be adjusted later.
-                    pair_group.to_edge(UP, buff=0.5)
+                    pair_group.to_edge(UP, buff=0.3)
 
                 column.add(pair_group)
             return column
@@ -77,8 +77,8 @@ class polinom_2(Scene):
         # col1 will be aligned to the left edge.
         col1.to_edge(LEFT)
         # Position col2 and col3 to the right of the previous column.
-        col2.next_to(col1, RIGHT, buff=0.5)
-        col3.next_to(col2, RIGHT, buff=0.5)
+        col2.next_to(col1, RIGHT, buff=0.1)
+        col3.next_to(col2, RIGHT, buff=0.1)
 
         
         self.play(Write(col1),run_time =8)

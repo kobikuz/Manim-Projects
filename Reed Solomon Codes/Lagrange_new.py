@@ -23,7 +23,7 @@ class Lagrange2(Scene):
         y_vals = [2, 2, -1]
         coors = [(x_vals[i], y_vals[i]) for i in range(3)]
 
-        colors = [RED, YELLOW_C, BLUE]
+        colors = [RED_A, YELLOW_C, BLUE]
 
         curve_kwargs = {
             "stroke_width": 6
@@ -35,7 +35,7 @@ class Lagrange2(Scene):
             axis_config={"include_tip": False},
             x_axis_config={"stroke_width": 6},
             y_axis_config={"stroke_width": 6}
-        )
+        ).to_edge(DOWN)
 
         points = VGroup()
         labels = VGroup()
@@ -205,9 +205,9 @@ class Lagrange2(Scene):
         eq11 = MathTex(
             r"l_2(x) = (x-1) (x-4)"
         )
-        eq10.scale(0.7).to_corner(UL).set_color(colors[0])
-        eq11.scale(0.7).next_to(eq10,RIGHT,buff = 0.5).set_color(colors[1])
-        eq12.scale(0.7).next_to(eq11,RIGHT,buff = 0.5).set_color(colors[2])
+        eq10.scale(0.8).to_corner(UL).set_color(colors[0])
+        eq11.scale(0.8).next_to(eq10,RIGHT,buff = 0.7).set_color(colors[1])
+        eq12.scale(0.8).next_to(eq11,RIGHT,buff = 0.7).set_color(colors[2])
         
         eq10s = MathTex(
             r"l_1(x) = (1-3) (1-4)"
@@ -218,9 +218,9 @@ class Lagrange2(Scene):
         eq11s = MathTex(
             r"l_2(x) = (3-1) (3-4)"
         )
-        eq10s.scale(0.7).move_to(eq10).set_color(colors[0])
-        eq11s.scale(0.7).move_to(eq11).set_color(colors[1])
-        eq12s.scale(0.7).move_to(eq12).set_color(colors[2])
+        eq10s.scale(0.8).move_to(eq10).set_color(colors[0])
+        eq11s.scale(0.8).move_to(eq11).set_color(colors[1])
+        eq12s.scale(0.8).move_to(eq12).set_color(colors[2])
 
         eq20 = MathTex(
         r"l_1(x) = \frac{1}{6} (x - 3) (x - 4)"
@@ -246,9 +246,9 @@ class Lagrange2(Scene):
             lambda t: axes.c2p(t, p2_l2_1(t)),
             t_range=(0, 5), color=colors[2], stroke_width=6
         )
-        eq20.scale(0.7).move_to(eq10)
-        eq21.scale(0.7).move_to(eq11)
-        eq22.scale(0.7).move_to(eq12)
+        eq20.scale(0.8).move_to(eq10)
+        eq21.scale(0.8).move_to(eq11)
+        eq22.scale(0.8).move_to(eq12)
         
         eq_arr_result_1 = MathTex(r" =6")
         eq_arr_result_2 = MathTex(r" =-2")
@@ -281,9 +281,9 @@ class Lagrange2(Scene):
             t_range=(0.1, 5), color=colors[2], stroke_width=6
         )
         
-        eq20f.scale(0.7).move_to(eq10)
-        eq21f.scale(0.7).move_to(eq11)
-        eq22f.scale(0.7).move_to(eq12)
+        eq20f.scale(0.8).move_to(eq10)
+        eq21f.scale(0.8).move_to(eq11)
+        eq22f.scale(0.8).move_to(eq12)
         
         eq_arr_first = [eq10,eq11,eq12]
         p2_funcs0 = [p2_l1_c,p2_l2_c,p2_l3_c]
@@ -298,7 +298,7 @@ class Lagrange2(Scene):
             k=0
             self.play(Write(eq_arr_first[i]),run_time = 1.5)
             self.play(Write(p2_funcs0[i]))## basic func
-            self.wait(0.5)
+            self.wait(1)
             if i==2:
                 k=1
             self.play(Indicate(labels[i][0][1+k]))
